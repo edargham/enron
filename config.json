@@ -1,5 +1,5 @@
 {
-    "data_root_dir": "E:\\Data Archive\\Datasets\\Enron Emails\\raw\\maildir",
-    "db_connection": "bolt://username:password@localhost:7687",
+    "data_root_dir": "E:\\Data Archive\\Datasets\\Enron Emails\\csv\\emails.csv",
+    "db_connection": "bolt://neo4j:anrc1998@localhost:7687",
     "db_name": "enron"
 }
