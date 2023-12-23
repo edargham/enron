@@ -94,3 +94,66 @@ def get_ews_investigation_scope():
     print()
   # endfor
 # endfunc
+def get_sec_emails():
+  '''
+  Prints the sec email rules sent by Rex Rogers.
+  '''
+ 
+  query = f'''
+    MATCH (email: EmailMessage)
+    WHERE email.subject CONTAINS 'NEW S.E.C. RULES'
+    RETURN email
+  '''
+ 
+  results, _ = run_query(query, db)
+ 
+  print('SEC emails found:')
+  for result in results:
+    email_node = EmailMessage.inflate(result[0])
+    print(email_node.subject)
+    print('Sent to:')
+    for employee in email_node.sent_to:
+      print(employee.emp_name)
+    # endfor
+    print()
+  # endfor
+  db.close_connection()
+# endfunc
+   
+def get_ljm_festow_affair():
+  '''
+  Prints the LJM email Activity by Festow.
+  '''
+ 
+  query = '''
+    MATCH (incom_email: EmailMessage)-[:SENT_TO]->(andrew: Employee {emp_name: 'andrew.fastow'})-[:SENT_FROM]->(out_email: EmailMessage)
+    WHERE  out_email.body CONTAINS 'LJM' AND incom_email.body CONTAINS 'LJM'
+    RETURN incom_email, andrew, out_email
+  '''
+ 
+  results, _ = run_query(query, db)
+ 
+  print('Andrew\'s involvement with the LJM affair:')
+  for result in results:
+    email_node = EmailMessage.inflate(result[0])
+    print('Message Id:', email_node.mid)
+    print(email_node.subject)
+    print('Sent to:')
+    for employee in email_node.sent_to:
+      print(employee.emp_name)
+    # endfor
+    print('body:')
+    print(email_node.body)
+    print()
+  # endfor
+   
+  sent_emails = EmailMessage.inflate(results[0][2])
+  print('Emails sent from Andrew:')
+  print('Message Id:', sent_emails.mid)
+  print(sent_emails.subject)
+  print(sent_emails.recipients)
+  print(sent_emails.body)
+  print()
+ 
+  db.close_connection()
+# endfunc
