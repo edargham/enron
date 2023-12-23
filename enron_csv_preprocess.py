@@ -5,7 +5,7 @@ from email import message_from_string
 from neomodel import config, db
 
 import re
-import json
+from utils import *
 
 from models.employee import Employee, EmailMessage
 
@@ -58,21 +58,6 @@ def filter_recipient_email(rec: str) -> list | str:
 # endfunc
 
 # %%
-def read_config():
-    data = None
-
-    with open('./config.json', 'r') as file:
-        data = json.load(file)
-    #endwith
-
-    return data
-# endfunc
-
-def connect_to_n4j():
-    db.set_connection(f'{config.DATABASE_URL}/{config.DATABASE_NAME}')
-# endfunc
-    
-# %%
 if __name__ == '__main__':
     csv_path = ''
     print('Initializing...')
@@ -120,7 +105,7 @@ if __name__ == '__main__':
 
     try:
         print('Connecting to Graph Database...')
-        connect_to_n4j()
+        db = connect_to_n4j(db)
 
         employees = set()
 
